@@ -18,12 +18,12 @@ public class LoadImagesManager : MonoBehaviour
     public List<UiImageObject> imagesObjectsList = new List<UiImageObject>();
 
     private string folderPath;
-    
+
     private void Start()
     {
         SetupButtons();
     }
-    
+
     private void SetupButtons()
     {
         getFolderPathButton.onClick.AddListener(() =>
@@ -36,10 +36,13 @@ public class LoadImagesManager : MonoBehaviour
 
     private void LoadImagesFromFolderPath()
     {
-        StartCoroutine(LoadImagesFromFileIe());
+        if (!string.IsNullOrEmpty(folderPath))
+            StartCoroutine(LoadImagesFromFileIe());
+        else
+            Debug.LogError("Select folder!");
     }
 
-    private IEnumerator LoadImagesFromFileIe()  //coroutine for prevent unity freeze when there are loaded a lot of images for example 1200
+    private IEnumerator LoadImagesFromFileIe() //coroutine for prevent unity freeze when there are loaded a lot of images for example 1200
     {
         if (imagesObjectsList != null && imagesObjectsList.Any())
         {
@@ -51,14 +54,23 @@ public class LoadImagesManager : MonoBehaviour
         }
 
         LoadFromFolder.GetImagesNamesList(folderPath);
-        foreach (var imagesPaths in LoadFromFolder.imagesPaths)
+
+        if (LoadFromFolder.imagesPaths.Any() && LoadFromFolder.imagesPaths != null)
         {
-            UiImageObject uiObject = Instantiate(uiObjectPrefab, parent: listGrid).GetComponent<UiImageObject>();
-            uiObject.image.material.mainTexture = LoadFromFolder.LoadImageToTexture(imagesPaths);
-            uiObject.creationDateText.text = "Creation date " + LoadFromFolder.GetImageCreationDate(imagesPaths);
-            uiObject.nameText.text = "Name: " + LoadFromFolder.GetImageName(imagesPaths);
-            imagesObjectsList.Add(uiObject);
-            yield return new WaitForEndOfFrame();
+            foreach (var imagesPaths in LoadFromFolder.imagesPaths)
+            {
+                UiImageObject uiObject = Instantiate(uiObjectPrefab, parent: listGrid).GetComponent<UiImageObject>();
+                uiObject.image.material.mainTexture = LoadFromFolder.LoadImageToTexture(imagesPaths);
+                uiObject.creationDateText.text = "Creation date " + LoadFromFolder.GetImageCreationDate(imagesPaths);
+                uiObject.nameText.text = "Name: " + LoadFromFolder.GetImageName(imagesPaths);
+                imagesObjectsList.Add(uiObject);
+                yield return new WaitForEndOfFrame();
+            } 
         }
+        else
+        {
+            Debug.LogError("No PNG files found in folder");
+        }
+       
     }
 }
