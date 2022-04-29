@@ -17,7 +17,11 @@ public static class LoadFromFolder
     public static Texture2D LoadImageToTexture(string path)
     {
         WWW imageLoad = new WWW(path);
+<<<<<<< HEAD
         Texture2D imageTexture = new Texture2D(imageLoad.texture.width,imageLoad.texture.height); 
+=======
+        Texture2D imageTexture = new Texture2D(2048, 2048); 
+>>>>>>> ea5e2828c6622b7b2c886be18a0345180af19765
         imageLoad.LoadImageIntoTexture(imageTexture);
         return imageTexture;
     }
