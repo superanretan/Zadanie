@@ -60,9 +60,11 @@ public class LoadImagesManager : MonoBehaviour
             foreach (var imagesPaths in LoadFromFolder.imagesPaths)
             {
                 UiImageObject uiObject = Instantiate(uiObjectPrefab, parent: listGrid).GetComponent<UiImageObject>();
-                uiObject.image.material.mainTexture = LoadFromFolder.LoadImageToTexture(imagesPaths);
-                uiObject.creationDateText.text = "Creation date " + LoadFromFolder.GetImageCreationDate(imagesPaths);
-                uiObject.nameText.text = "Name: " + LoadFromFolder.GetImageName(imagesPaths);
+                
+                uiObject.SetUiImageObject(LoadFromFolder.LoadImageToTexture(imagesPaths),
+                    LoadFromFolder.GetImageName(imagesPaths)
+                    , LoadFromFolder.GetImageCreationTime(imagesPaths));
+                
                 imagesObjectsList.Add(uiObject);
                 yield return new WaitForEndOfFrame();
             } 

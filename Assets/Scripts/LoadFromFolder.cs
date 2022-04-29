@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -17,7 +17,7 @@ public static class LoadFromFolder
     public static Texture2D LoadImageToTexture(string path)
     {
         WWW imageLoad = new WWW(path);
-        Texture2D imageTexture = new Texture2D(1024, 1024, TextureFormat.DXT5, false); 
+        Texture2D imageTexture = new Texture2D(imageLoad.texture.width,imageLoad.texture.height); 
         imageLoad.LoadImageIntoTexture(imageTexture);
         return imageTexture;
     }
@@ -27,9 +27,10 @@ public static class LoadFromFolder
         return Path.GetFileName(path);
     }
     
-    public static string GetImageCreationDate(string path)
+    public static string GetImageCreationTime(string path)
     {
-        return Directory.GetCreationTime(path).ToString("MM/dd/yyyy HH:mm");
+        var timeDif = DateTime.Now - Directory.GetCreationTime(path);
+        return timeDif.Days + " Days " + timeDif.Hours + " Hours " + timeDif.Minutes + " Minutes ";
     }
     
     
